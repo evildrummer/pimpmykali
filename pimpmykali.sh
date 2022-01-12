@@ -203,13 +203,24 @@ fix_missing () {
     # fix_qterminal_history
     }
     
-fix_addons () {
+install_addons () {
 
-    apt install xclip xrdp terminator bloodhound tree pip3
-    wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash
-    pip3 install updog
+    apt install xclip xrdp terminator bloodhound tree jq mpack python3.9-venv
+    systemctl enable xrdp && systemctl start xrdp
+    echo -e "\n  $greenplus wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash"
     echo -e "\n  $greenplus Installing additional tools - complete"
 }
+
+install_pwncat () {
+
+    python3 -m venv /opt/pwncat-venv
+    source /opt/pwncat-venv/bin/activate
+    pip install pwncat-cs
+    deactivate
+    echo -e "\n  $greenplus Installing pwncat - complete"
+}
+
+
 fix_all () {
     fix_missing   $force
     make_rootgreatagain $force
@@ -219,7 +230,8 @@ fix_all () {
     fix_grub
     fix_smbconf
     fix_impacket
-    fix_addons
+    install_addons
+    install_pwncat
     # ID10T REMINDER: DONT CALL THESE HERE THEY ARE IN FIX_MISSING!
     # python-pip-curl python3_pip fix_golang fix_nmap
     # fix_upgrade is not a part of fix_missing and only
@@ -1406,6 +1418,8 @@ check_arg () {
       then pimpmykali_menu
      else
       case $1 in
+      --pwncat) install_pwncat                 ;;
+      --addons) install_addons                     ;;
       --menu) pimpmykali_menu                  ;;
        --all) fix_all                          ;;
        --smb) fix_smbconf                      ;;
