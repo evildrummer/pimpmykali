@@ -202,7 +202,14 @@ fix_missing () {
     fix_gowitness         # 01.27.2021 added due to 404 errors with go get -u github.com/sensepost/gowitness
     # fix_qterminal_history
     }
+    
+fix_addons () {
 
+    apt install xclip xrdp terminator bloodhound tree
+    wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash
+    pip3 install updog
+    echo -e "\n  $greenplus Installing additional tools - complete"
+}
 fix_all () {
     fix_missing   $force
     make_rootgreatagain $force
@@ -212,6 +219,7 @@ fix_all () {
     fix_grub
     fix_smbconf
     fix_impacket
+    fix_addons
     # ID10T REMINDER: DONT CALL THESE HERE THEY ARE IN FIX_MISSING!
     # python-pip-curl python3_pip fix_golang fix_nmap
     # fix_upgrade is not a part of fix_missing and only
