@@ -1,0 +1,18 @@
+function htb(){
+cd "/home/$USER/HTB/$1"
+}
+
+function thm(){
+cd "/home/$USER/THM/$1"
+}
+
+alias multipull="find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} pull \;"
+alias gobuster-m="gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 -u"
+alias gobuster-c="gobuster dir -w /usr/share/wordlists/dirb/common.txt -t 50 -u"
+alias gobuster-vhost="gobuster vhost -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-110000.txt -u"
+alias setclip="xclip -selection c"
+alias getclip="xclip -selection c -o"
+alias psexec="/usr/bin/impacket-psexec"
+alias startroom="cd ~/git/RoomPrepper/ && ./start_new_room.sh"
+alias sudo="sudo env \"PATH=$PATH\""
+alias up2date="sudo apt update && sudo apt upgrade && sudo apt autoremove"
