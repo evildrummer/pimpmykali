@@ -205,7 +205,7 @@ fix_missing () {
     
 fix_addons () {
 
-    apt install xclip xrdp terminator bloodhound tree
+    apt install xclip xrdp terminator bloodhound tree pip3
     wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash
     pip3 install updog
     echo -e "\n  $greenplus Installing additional tools - complete"
