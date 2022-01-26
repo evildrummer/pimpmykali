@@ -31,6 +31,16 @@
   - 0xC0FFEE Home Lab Build
     https://docs.google.com/document/d/1DH-epmXJMvQtOnDQYa3zUXvq9497Mm3276K8frNz2UM
 
+# Revision 1.4.3 - MAPT Course pre-requirements + mobSF
+  - install all pre-reqs in kali for the MAPT Course
+  - git clone and install MobSF to /opt 
+
+# Revision 1.4.2 - fix_go_path function update
+  - update to findrealuser variable :
+    - check for display 0 (:0) if found get user from display 0 tty login
+    - if display 0 (:0) is not found, get user from tty login
+  - revision history 1.4.0 moved to changelog.txt
+
 # Revision 1.4.1 - PPA Course Prerequisites
   - Menu Option P has changed option now installs pre-req the PPA Course
     - installs whois and bind9-dnsutils
@@ -40,16 +50,6 @@
   - Disable power management function moved to fix_missing function
     - will be applied in options 0, 1 or N
   - revision history 1.3.9 moved to changelog.txt
-
-# Revision 1.4.0 - httprobe added
-  - added fix_httprobe to fix_missing function
-    - checks for /usr/bin/httprobe if not installed install it via kali repo
-  - function will be called via menu options
-    - 1 - fix missing
-    - 0 - fix all ( only runs 1 thru 8 )
-    - N - new vm setup
-    - H - standalone function
-  - added menu option H only this fix will be applied
 
 # Menu Breakdown of Pimpmykali
 
