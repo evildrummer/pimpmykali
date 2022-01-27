@@ -229,7 +229,7 @@ fix_all () {
     fix_flameshot $force
     fix_grub
     fix_smbconf
-    fix_impacket
+    # fix_impacket
     install_addons
     install_pwncat
     # ID10T REMINDER: DONT CALL THESE HERE THEY ARE IN FIX_MISSING!
