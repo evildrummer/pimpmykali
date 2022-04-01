@@ -171,8 +171,8 @@ apt_autoremove_complete() {
     }
 
 folder_git() {
-  sudo mkdir /opt/git/
-  sudo chown -R $finduser:$finduser /opt/git/
+  mkdir /opt/git/
+  chown -R $finduser:$finduser /opt/git/
 }
 
 fix_missing () {
@@ -259,12 +259,13 @@ get_gitrepos () {
 }
 
 get_zshrc () {
-    cat $(pwd)/files/zshrc) >> /home/$finduser/.zshrc
+    cat $(pwd)/files/zshrc >> /home/$finduser/.zshrc
     echo -e "\n  $greenplus Adding aliases - complete"
 }
 
 
 fix_all () {
+    folder_git
     fix_missing   $force
     make_rootgreatagain $force
     seclists      $force
@@ -273,7 +274,6 @@ fix_all () {
     fix_grub
     fix_smbconf
     # fix_impacket
-    folder_git
     install_addons
     install_pwncat
     install_autorecon
