@@ -212,16 +212,11 @@ fix_missing () {
     
 install_addons () {
 
-    apt install xclip xrdp terminator bloodhound tree jq mpack python3.9-venv qrencode feh
-    systemctl enable xrdp && systemctl start xrdp
+    apt install xclip xrdp terminator bloodhound tree jq mpack python3.9-venv qrencode feh pipx
+    sudo systemctl enable xrdp && sudo systemctl start xrdp
     echo -e "\n  $greenplus wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash"
 
-    # Installing AutoRecon
-    
-
-    # Installing ScareCrow
-
-
+ 
     echo -e "\n  $greenplus Installing additional packages - complete"
 }
 
@@ -263,7 +258,7 @@ get_gitrepos () {
 }
 
 get_zshrc () {
-    echo files/zshrc >> /home/$finduser/.zshrc
+    echo $(cat files/zshrc) >> /home/$finduser/.zshrc
     echo -e "\n  $greenplus Adding aliases - complete"
 }
 
@@ -277,6 +272,7 @@ fix_all () {
     fix_grub
     fix_smbconf
     # fix_impacket
+    folder_git
     install_addons
     install_pwncat
     install_scarecrow
