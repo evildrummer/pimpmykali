@@ -231,6 +231,7 @@ install_autorecon () {
 
 install_scarecrow () {
 
+    cd /opt/git/ScareCrow
     go get github.com/fatih/color
     go get github.com/yeka/zip
     go get github.com/josephspurrier/goversioninfo
@@ -258,7 +259,7 @@ get_gitrepos () {
 }
 
 get_zshrc () {
-    echo $(cat files/zshrc) >> /home/$finduser/.zshrc
+    cat $(pwd)/files/zshrc) >> /home/$finduser/.zshrc
     echo -e "\n  $greenplus Adding aliases - complete"
 }
 
@@ -275,10 +276,10 @@ fix_all () {
     folder_git
     install_addons
     install_pwncat
-    install_scarecrow
     install_autorecon
     get_zshrc
-    get_gitrepos 
+    get_gitrepos
+    install_scarecrow 
     # ID10T REMINDER: DONT CALL THESE HERE THEY ARE IN FIX_MISSING!
     # python-pip-curl python3_pip fix_golang fix_nmap
     # fix_upgrade is not a part of fix_missing and only
