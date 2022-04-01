@@ -9,7 +9,7 @@
 # Standard Disclaimer: Author assumes no liability for any damage
 
 # revision var
-    revision="1.4.6"
+    revision="1.5.1"
 
 # unicorn puke:
     red=$'\e[1;31m'
@@ -179,7 +179,7 @@ fix_missing () {
     eval apt -y remove kali-undercover $silent
     # 02.01.2020 - Added cifs-utils and libguestfs-tools as they are require for priv escalation
     # 10.05.2021 - Added dbus-x11 as it has become a common problem for those wanting to use gedit
-    eval apt -y install dkms build-essential autogen automake python-setuptools python3-setuptools python3-distutils python3.9-dev libguestfs-tools cifs-utils dbus-x11 $silent
+    eval apt -y install neo4j dkms build-essential autogen automake python-setuptools python3-setuptools python3-distutils python3.9-dev libguestfs-tools cifs-utils dbus-x11 $silent
     # check_python          # 07.02.21 - check_python check if python is symlinked to python2 if not, make it point to python2
     python-pip-curl
     python3_pip $force
@@ -199,6 +199,7 @@ fix_missing () {
     fix_pyftpdlib         # 09.01.21 - added pyftpdlib for python2
     fix_amass             # 09.02.21 - added amass precompiled binary
     fix_httprobe          # 01.04.22 - added httprobe precompiled binary
+    fix_assetfinder       # 03.17.22 - added assetfinder precompiled binary
     check_chrome
     fix_gowitness         # 01.27.2021 added due to 404 errors with go get -u github.com/sensepost/gowitness
     # fix_qterminal_history
@@ -259,6 +260,13 @@ fix_libwacom() {
     # fix for missing libwacom9 requires libwacom-common
     }
 
+fix_assetfinder () {
+    echo -e "\n  $greenplus Installing Assetfinder precompiled binary ... "
+    [[ -f /usr/bin/assetfinder ]] && rm -f /usr/bin/assetfinder || echo > /dev/null
+    wget https://github.com/tomnomnom/assetfinder/releases/download/v0.1.1/assetfinder-linux-amd64-0.1.1.tgz -O /tmp/assetfinder.tgz
+     tar xvfz /tmp/assetfinder.tgz -C /usr/bin/
+    }
+
 fix_httprobe() { # 01.04.22 - added httprobe precompiled binary to fix_missing
     if [ -f /usr/bin/httprobe ];
       then
@@ -281,6 +289,11 @@ fix_amass() {
     echo -e "\n  $greenplus amass installed"
     }
 
+
+fix_assetfinder () {
+   wget https://github.com/tomnomnom/assetfinder/releases/download/v0.1.1/assetfinder-linux-amd64-0.1.1.tgz -O /tmp/assetfinder
+   tar xvfz /tmp/assetfinder.tgz -C /usr/bin
+}
 fix_pyftpdlib() {
     echo -e "\n  $greenplus installing pyftpdlib"
     eval pip install pyftpdlib
@@ -502,6 +515,9 @@ python-pip-curl () {
 
 fix_bloodhound () {
     # Kali 2022.1 - bloodhound 4.1.0 incompatable collectors fix: downgrade to bloodhound 4.0.3
+    apt_update
+    eval apt-mark unhold bloodhound  # added - revision 1.5.0
+    eval apt -y install neo4j
     echo -e "\n  $greenplus Downgrading Bloodhound from current to 4.0.3"
     echo -e "\n  $greenplus Removing Bloodhound"
     eval apt -y remove bloodhound
@@ -534,6 +550,22 @@ fix_spike () {
     eval apt-mark hold spike
     echo -e "\n  $greenplus apt hold placed on spike package"
     }
+
+# 03.08.2022 - rev 1.4.7 - Replace current version of responder with older version
+fix_responder () {
+    echo -e "\n  $greenplus Fix Responder: Downloading Responder 3.0.6.0"
+    wget http://old.kali.org/kali/pool/main/r/responder/responder_3.0.6.0-0kali2_all.deb -O /tmp/responder3060.deb
+    echo -e "\n  $greenplus Fix Responder: Uninstalling current Responder"
+    eval apt update
+    eval apt -y remove responder
+    echo -e "\n  $greenplus Fix Responder: Package hold Responder"
+    eval apt-mark hold responder
+    echo -e "\n  $greenplus Fix Responder: Installing Responder 3.0.6.0"
+    sudo dpkg -i /tmp/responder3060.deb
+    rm -f /tmp/responder3060.deb
+    echo -e "\n  $greenplus Fix Responder - Complete"
+    }
+
 
 fix_mitm6() {
     [[ -d /opt/mitm6 ]] && rm -rf /opt/mitm6 || git clone https://github.com/dirkjanm/mitm6 /opt/mitm6
@@ -1097,18 +1129,18 @@ bpt () {
     exit_screen
     }
 
-downgrade_msf () {
-    echo -e "\n  $greenplus Downgrading Metasploit from v6.x to 5.1.101 \n"
-    eval apt -y remove metasploit-framework
-    wget https://archive.kali.org/kali/pool/main/m/metasploit-framework/metasploit-framework_5.0.101-0kali1%2Bb1_amd64.deb -O /tmp/metasploit-framework_5.deb
-    eval dpkg -i /tmp/metasploit-framework_5.deb
-    eval gem cleanup reline
-    eval msfdb init
-    rm -f /tmp/metasploit-framework_5.deb
-    apt-mark hold metasploit-framework
-    echo -e "\n  $greenplus metasploit downgraded \n"
-    echo -e "\n  $greenplus hold placed on metasploit-framework \n"
-    }
+#downgrade_msf () {
+#    echo -e "\n  $greenplus Downgrading Metasploit from v6.x to 5.1.101 \n"
+#    eval apt -y remove metasploit-framework
+#    wget https://archive.kali.org/kali/pool/main/m/metasploit-framework/metasploit-framework_5.0.101-0kali1%2Bb1_amd64.deb -O /tmp/metasploit-framework_5.deb
+#    eval dpkg -i /tmp/metasploit-framework_5.deb
+#    eval gem cleanup reline
+#    eval msfdb init
+#    rm -f /tmp/metasploit-framework_5.deb
+#    apt-mark hold metasploit-framework
+#    echo -e "\n  $greenplus metasploit downgraded \n"
+#    echo -e "\n  $greenplus hold placed on metasploit-framework \n"
+#    }
 
 # Upgraded virt-what function - 04.07.2021 rev 1.2.2
 virt_what() {
@@ -1232,16 +1264,16 @@ mapt_prereq() {
     # --- ANDROID STUDIO ONLY ---
     }
 
-ppa_prereq() {
-    # PMK 1.4.1 - Practical Phising Assesment Course Prereq - 01.05.22
-    echo -e "\n  $greenplus Installing PPA Course Prerequisites... \n"
-    sudo apt -y install whois bind9-dnsutils
-    echo -e "\n  $greenplus Git Cloning Spoofpoint to /opt/spoofpoint \n"
-    [[ -d /opt/spoofpoint ]] && rm -rf /opt/spoofpoint
-    git clone https://github.com/grahamhelton/spoofpoint /opt/spoofpoint
-    echo -e "\n  $greenplus Creating Symlink /usr/bin/spoofpoint \n"
-    ln -sf /opt/spoofpoint/spoofpoint /usr/bin/spoofpoint
-    }
+# ppa_prereq() {
+#    # PMK 1.4.1 - Practical Phising Assesment Course Prereq - 01.05.22
+#    echo -e "\n  $greenplus Installing PPA Course Prerequisites... \n"
+#    sudo apt -y install whois bind9-dnsutils
+#    echo -e "\n  $greenplus Git Cloning Spoofpoint to /opt/spoofpoint \n"
+#    [[ -d /opt/spoofpoint ]] && rm -rf /opt/spoofpoint
+#    git clone https://github.com/grahamhelton/spoofpoint /opt/spoofpoint
+#    echo -e "\n  $greenplus Creating Symlink /usr/bin/spoofpoint \n"
+#    ln -sf /opt/spoofpoint/spoofpoint /usr/bin/spoofpoint
+#    }
 
 mayor_mpp() {
     # additions to PMK 1.3.0 - Mayor MPP Course additions
@@ -1250,7 +1282,7 @@ mayor_mpp() {
     # check_msfversion=$(apt list --installed | grep -i metasploit | cut -d " " -f2 | cut -d "." -f1)
     # add check for msf version? if not 5 then place hold before upgrade and then downgrade
     apt_upgrade && apt_upgrade_complete
-    downgrade_msf
+    # downgrade_msf
     echo -e "\n  $greenplus installing apt-transport-https dnsutils dotnet-sdk-3.1"
     apt -y install apt-transport-https dnsutils dotnet-sdk-3.1
     # download directly to /tmp and install
@@ -1456,8 +1488,9 @@ pimpmykali_menu () {
     echo -e "  K - Reconfigure Keyboard      current keyb/lang : $(cat /etc/default/keyboard | grep XKBLAYOUT | cut -d "\"" -f2)\n" # reconfig_keyboard
     echo -e " Key  Stand alone functions:   Description:"                                           # optional line
     echo -e " ---  ----------------------   ------------"                                           # optional line
+    echo -e "  R - Fix Responder            (Downgrade Responder to v3.0.6.0)"                      # fix_responder
     echo -e "  B - Fix Bloodhound           (Downgrade Bloodhound to v4.0.3)"                       # sorry blind, need the letter B... was bpt function
-    echo -e "  D - Downgrade Metasploit     (Downgrade from MSF6 to MSF5)"                          # downgrade_msf
+    #echo -e "  D - Downgrade Metasploit     (Downgrade from MSF6 to MSF5)"                          # downgrade_msf
     echo -e "  C - Missing Google-Chrome    (install google-chrome only)"                           # check_chrome / fix_chrome
     echo -e "  S - Fix Spike                (remove spike and install spike v2.9)"                  # fix_spike
     echo -e "  F - Broken XFCE Icons fix    (stand-alone function: only applies broken xfce fix)"   # fix_broken_xfce
@@ -1465,7 +1498,6 @@ pimpmykali_menu () {
     echo -e "  H - Fix httprobe missing     (fixes httprobe missing only)"                          # fix_httprobe
     echo -e "  L - Install Sublime Editor   (install the sublime text editor)"                      # install_sublime
     echo -e "  M - Mayors MPP Course Setup  (adds requirments for Mayors MPP Course)"               # mayor_mpp
-    echo -e "  P - PPA Course Setup         (adds requirments for Graham Helton - PPA Course)"      # ppa_prereq
     echo -e "  A - MAPT Course Setup        (adds requirments for MAPT Course)"                     # mapt_course
     #echo -e "  P - Disable PowerManagement  (Gnome/XFCE Detection Disable Power Management)"        # disable_power_checkde # Thanks pswalia2u!!
     echo -e "  W - Gowitness Precompiled    (download and install gowitness)"                       # fix_gowitness
@@ -1484,7 +1516,7 @@ pimpmykali_menu () {
         6) make_rootgreatagain;;
         7) install_atom;;
         8) fix_nmap ;;
-        9) only_upgrade;;
+        9) apt_update; fix_libwacom; only_upgrade;;
         0) fix_all; run_update; virt_what; check_vm;;
         !) forced=1; fix_sead_warning;;
       a|A) mapt_prereq;;
@@ -1496,9 +1528,9 @@ pimpmykali_menu () {
       v|V) install_vscode;;
       w|W) fix_gowitness;;
       n|N) fix_all; fix_upgrade;;
-      d|D) downgrade_msf;;
+    #  d|D) downgrade_msf;;
       b|B) fix_bloodhound;; # was bpt;;
-      p|P) ppa_prereq;;
+      r|R) fix_responder;;
       # move this to another letter or omit completely as its called in fix_missing
       # p|P) disable_power_checkde;;
       m|M) mayor_mpp;;

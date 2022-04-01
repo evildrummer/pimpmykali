@@ -28,26 +28,24 @@
   - Alek https://github.com/onomastus
   - Gr1mmie https://github.com/Gr1mmie
   - Aksheet https://github.com/Aksheet10
-  - 0xC0FFEE Home Lab Build
-    https://docs.google.com/document/d/1DH-epmXJMvQtOnDQYa3zUXvq9497Mm3276K8frNz2UM
+  - 0xC0FFEE VirtualBox Home Lab Build (updated link!)
+    https://benheater.com/building-a-security-lab-in-virtualbox/
   - TheMadHuman https://github.com/TMH-Sec
 
-# Writeups / Honorable Mentions 
+# Writeups / Honorable Mentions
   - ip3c4c_n00b https://ip3c4c.com/2202_homelab_vmware/
 
-# Revision 1.4.6 - Bloodhound v4.1.0 incompatible collectors
-  - Menu Option B - Downgrade Bloodhound from 4.1.0 to 4.0.3
-    - is only called from Menu option B
-    - removes bloodhound, purges bloodhound
-    - downloads and installs bloodhound 4.0.3
-    - marks bloodhound package to prevent future upgrading
-  - revision history for 1.4.1 -> 1.4.4 moved to changelog.txt
+# Revision 1.5.1 - Downgrade Metasploit - Disabled
+  - ruby has been upgraded to a default of 3.0
+    - msf5 requires ruby 2.8 or lower
+  - Downgrade msf5 function has been disabled
+    - Menu option D - Downgrade to msf5 Disabled
+    - Menu option M - MPP Course, removed downgrade to msf5 function  
 
-# Revision 1.4.5 - libwacom-common breaks apt
-  - Kali 2022.1 libwacom9 requires libwacom-common
-    - added to fix_missing function so it will be automatically installed
-    - menu options 0, 1 or N will apply this fix
-    - Credit: TheMadHuman  for bringing it to my attention
+# Revision 1.5.0 - fix_bloodhound function update
+  - removed hold on bloodhound at the start of the function to remove
+    an additional complication that was being created   
+
 
 # Menu Breakdown of Pimpmykali
 
