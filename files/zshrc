@@ -15,4 +15,6 @@ alias getclip="xclip -selection c -o"
 alias psexec="/usr/bin/impacket-psexec"
 alias startroom="cd ~/git/RoomPrepper/ && ./start_new_room.sh"
 alias sudo="sudo env \"PATH=$PATH\""
-alias up2date="sudo apt update && sudo apt upgrade && sudo apt autoremove"
+alias up2date="sudo apt update && sudo apt upgrade && sudo apt autoremove -y"
+alias getqr="getclip | qrencode -o - | feh --force-aliasing -ZF -"
+

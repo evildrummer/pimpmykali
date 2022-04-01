@@ -170,6 +170,11 @@ apt_autoremove_complete() {
     echo -e "\n  $greenplus apt autoremove - complete"
     }
 
+folder_git() {
+  sudo mkdir /opt/git/
+  sudo chown -R $finduser:$finduser /opt/git/
+}
+
 fix_missing () {
     fix_sources
     fix_hushlogin         # 06.18.2021 - added fix for .hushlogin file
@@ -207,10 +212,37 @@ fix_missing () {
     
 install_addons () {
 
-    apt install xclip xrdp terminator bloodhound tree jq mpack python3.9-venv
+    apt install xclip xrdp terminator bloodhound tree jq mpack python3.9-venv qrencode feh
     systemctl enable xrdp && systemctl start xrdp
     echo -e "\n  $greenplus wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash"
-    echo -e "\n  $greenplus Installing additional tools - complete"
+
+    # Installing AutoRecon
+    
+
+    # Installing ScareCrow
+
+
+    echo -e "\n  $greenplus Installing additional packages - complete"
+}
+
+install_autorecon () {
+
+    sudo apt install python3-venv
+    python3 -m pip install --user pipx
+    python3 -m pipx ensurepath
+    pipx install git+https://github.com/Tib3rius/AutoRecon.git
+    echo -e "\n  $greenplus Installing AutoRecon - complete"
+}
+
+install_scarecrow () {
+
+    go get github.com/fatih/color
+    go get github.com/yeka/zip
+    go get github.com/josephspurrier/goversioninfo
+    cd /opt/git/ScareCrow && go build .
+    sudo cp /opt/git/ScareCrow/ScareCrow /usr/bin/scarecrow
+
+    echo -e "\n  $greenplus Installing Scarecrow - complete"
 }
 
 install_pwncat () {
@@ -220,6 +252,19 @@ install_pwncat () {
     pip install pwncat-cs
     deactivate
     echo -e "\n  $greenplus Installing pwncat - complete"
+}
+
+get_gitrepos () {
+    cd /opt/git/
+    for url in $(cat files/git-urls.txt); do
+    git clone $url;
+    done
+    echo -e "\n  $greenplus Downloading GitHub Repos - complete"
+}
+
+get_zshrc () {
+    echo files/zshrc >> /home/$finduser/.zshrc
+    echo -e "\n  $greenplus Adding aliases - complete"
 }
 
 
@@ -234,6 +279,10 @@ fix_all () {
     # fix_impacket
     install_addons
     install_pwncat
+    install_scarecrow
+    install_autorecon
+    get_zshrc
+    get_gitrepos 
     # ID10T REMINDER: DONT CALL THESE HERE THEY ARE IN FIX_MISSING!
     # python-pip-curl python3_pip fix_golang fix_nmap
     # fix_upgrade is not a part of fix_missing and only
